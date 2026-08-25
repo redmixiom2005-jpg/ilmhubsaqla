@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { api } from '../services/api';
 import {
   Cookie,
   X,
@@ -45,11 +46,10 @@ export const CookiesModal: React.FC<CookiesModalProps> = ({
   const checkStatus = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/cookies');
-      if (res.ok) {
-        const json = await res.json();
-        setHasCookies(Boolean(json?.data?.hasCookies));
-        setCookiePath(json?.data?.path || null);
+      const response = await api.getCookieStatus();
+      if (response.success && response.data) {
+        setHasCookies(response.data.hasCookies);
+        setCookiePath(response.data.path);
       }
     } catch {
       // ignore
@@ -75,19 +75,14 @@ export const CookiesModal: React.FC<CookiesModalProps> = ({
     setMessage(null);
 
     try {
-      const res = await fetch('/api/cookies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cookies: rawCookies.trim() })
-      });
-      const json = await res.json();
-      if (json.success) {
+      const response = await api.saveCookies(rawCookies.trim());
+      if (response.success) {
         setHasCookies(true);
         setCookieText('');
         setMessage({ type: 'success', text: 'Cookies muvaffaqiyatli saqlandi! Endi videolarni erkin yuklab olishingiz mumkin.' });
         if (onCookiesUpdated) onCookiesUpdated();
       } else {
-        setMessage({ type: 'error', text: json.error?.message || 'Xatolik yuz berdi' });
+        setMessage({ type: 'error', text: response.error?.message || 'Xatolik yuz berdi' });
       }
     } catch (err) {
       setMessage({ type: 'error', text: (err as Error).message });
@@ -99,8 +94,8 @@ export const CookiesModal: React.FC<CookiesModalProps> = ({
   const handleDelete = async () => {
     setIsSaving(true);
     try {
-      const res = await fetch('/api/cookies', { method: 'DELETE' });
-      if (res.ok) {
+      const response = await api.deleteCookies();
+      if (response.success) {
         setHasCookies(false);
         setCookiePath(null);
         setMessage({ type: 'success', text: 'Cookies o‘chirildi' });

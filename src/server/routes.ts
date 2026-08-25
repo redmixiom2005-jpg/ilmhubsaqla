@@ -263,7 +263,7 @@ apiRouter.post('/cookies', (req: Request, res: Response) => {
     }
 
     const targetPath = process.env.NODE_ENV === 'production'
-      ? '/tmp/cookies.txt'
+      ? path.join(config.downloadDir, 'cookies.txt')
       : path.resolve(process.cwd(), 'cookies.txt');
 
     fs.writeFileSync(targetPath, cookies.trim(), 'utf-8');

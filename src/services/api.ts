@@ -5,6 +5,12 @@
 
 import { ApiResponse, DownloadJob, ServerHealth, VideoMetadata } from '../types';
 
+export interface CookieStatus {
+  hasCookies: boolean;
+  path: string | null;
+  message?: string;
+}
+
 // Read API URL from environment, or use relative URL when frontend is served from same server
 const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
@@ -38,15 +44,15 @@ class ApiClient {
 
       const contentType = res.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        if (!res.ok) {
-          return {
-            success: false,
-            error: {
-              code: `HTTP_${res.status}`,
-              message: `Server returned HTTP ${res.status}`
-            }
-          };
-        }
+        return {
+          success: false,
+          error: {
+            code: API_BASE_URL ? 'INVALID_BACKEND_RESPONSE' : 'BACKEND_NOT_CONFIGURED',
+            message: API_BASE_URL
+              ? `Backend returned a non-JSON response (HTTP ${res.status})`
+              : 'Backend API URL is not configured'
+          }
+        };
       }
 
       const json = await res.json();
@@ -109,6 +115,21 @@ class ApiClient {
     return this.request<DownloadJob>(`/api/download/${encodeURIComponent(jobId)}/status`, {
       method: 'GET'
     }, 10000);
+  }
+
+  async getCookieStatus(): Promise<ApiResponse<CookieStatus>> {
+    return this.request<CookieStatus>('/api/cookies', { method: 'GET' }, 10000);
+  }
+
+  async saveCookies(cookies: string): Promise<ApiResponse<CookieStatus>> {
+    return this.request<CookieStatus>('/api/cookies', {
+      method: 'POST',
+      body: JSON.stringify({ cookies })
+    }, 10000);
+  }
+
+  async deleteCookies(): Promise<ApiResponse<CookieStatus>> {
+    return this.request<CookieStatus>('/api/cookies', { method: 'DELETE' }, 10000);
   }
 
   async cancelDownload(jobId: string): Promise<ApiResponse<{ cancelled: boolean }>> {

@@ -5,6 +5,7 @@
 
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -52,7 +53,7 @@ const getCookieFile = (): string | null => {
     return path.resolve(process.env.COOKIES_FILE);
   }
   if (process.env.YTDLP_COOKIES) {
-    const tmpCookie = '/tmp/ilmhub_cookies.txt';
+    const tmpCookie = path.join(os.tmpdir(), 'ilmhub_cookies.txt');
     try {
       fs.writeFileSync(tmpCookie, process.env.YTDLP_COOKIES, 'utf-8');
       return tmpCookie;
@@ -64,7 +65,7 @@ const getCookieFile = (): string | null => {
   if (fs.existsSync(localCookie)) {
     return localCookie;
   }
-  const tmpCookie = '/tmp/cookies.txt';
+  const tmpCookie = path.join(os.tmpdir(), 'cookies.txt');
   if (fs.existsSync(tmpCookie)) {
     return tmpCookie;
   }

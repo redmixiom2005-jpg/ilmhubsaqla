@@ -410,7 +410,8 @@ class DownloadJobManager {
     }
 
     const resolved = path.resolve(config.downloadDir, job.filename);
-    if (!resolved.startsWith(config.downloadDir)) {
+    const downloadRoot = path.resolve(config.downloadDir);
+    if (resolved !== downloadRoot && !resolved.startsWith(`${downloadRoot}${path.sep}`)) {
       return null;
     }
 
