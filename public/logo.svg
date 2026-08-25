@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ilmhub-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0056e0"/>
+      <stop offset="100%" stop-color="#0047ba"/>
+    </linearGradient>
+  </defs>
+  <!-- Background with subtle corner radius -->
+  <rect width="512" height="512" rx="64" fill="url(#ilmhub-blue)" />
+  
+  <!-- Outer Arch/Dome -->
+  <path d="M 148 308 L 148 236 C 148 176 196 128 256 128 C 316 128 364 176 364 236 L 364 308 C 364 316 357 322 349 322 L 329 322 C 321 322 314 316 314 308 L 314 236 C 314 204 288 178 256 178 C 224 178 198 204 198 236 L 198 308 C 198 316 191 322 183 322 L 163 322 C 155 322 148 316 148 308 Z" fill="#FFFFFF"/>
+  
+  <!-- 4-pointed Diamond Star in Center -->
+  <path d="M 256 208 Q 256 244 286 256 Q 256 268 256 304 Q 256 268 226 256 Q 256 244 256 208 Z" fill="#FFB800"/>
+  
+  <!-- Open Book at Bottom -->
+  <path d="M 148 348 C 148 340 155 334 163 334 L 230 334 C 242 334 252 342 256 348 C 260 342 270 334 282 334 L 349 334 C 357 334 364 340 364 348 L 364 374 C 364 382 357 388 349 388 L 290 388 C 274 388 262 398 256 408 C 250 398 238 388 222 388 L 163 388 C 155 388 148 382 148 374 Z" fill="#FFFFFF"/>
+</svg>

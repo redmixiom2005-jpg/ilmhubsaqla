@@ -1,0 +1,6 @@
+{
+  "name": "IlmHub Saqla Bot",
+  "description": "IlmHub Saqla Bot — YouTube video va Shorts videolarini sifat tanlab saqlash uchun zamonaviy downloader.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

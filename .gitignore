@@ -1,0 +1,14 @@
+node_modules/
+build/
+dist/
+coverage/
+downloads/
+temp/
+bin/
+.DS_Store
+*.log
+.env
+.env.local
+.env.*.local
+!.env.example
+
