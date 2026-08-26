@@ -32,6 +32,9 @@ async function startServer() {
         if (config.nodeEnv !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
           return callback(null, true);
         }
+        if (config.nodeEnv === 'production' && allowedOrigins.length === 0) {
+          return callback(null, true);
+        }
         return callback(new Error('Origin not allowed'));
       },
       credentials: true
