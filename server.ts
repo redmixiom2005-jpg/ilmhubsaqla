@@ -35,6 +35,9 @@ async function startServer() {
         if (config.nodeEnv === 'production' && allowedOrigins.length === 0) {
           return callback(null, true);
         }
+        if (config.nodeEnv === 'production' && /^https:\/\/([a-z0-9-]+\.)*vercel\.app$/.test(origin)) {
+          return callback(null, true);
+        }
         return callback(new Error('Origin not allowed'));
       },
       credentials: true
