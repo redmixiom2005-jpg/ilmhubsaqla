@@ -31,9 +31,6 @@ export const Footer: React.FC = () => {
             </span>
           </div>
 
-          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 max-w-md">
-            {t.appSlogan}
-          </p>
         </div>
 
         {/* Legal & Usage Notice Box */}

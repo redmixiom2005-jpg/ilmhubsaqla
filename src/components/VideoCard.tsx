@@ -24,10 +24,9 @@ import {
 
 interface VideoCardProps {
   video: VideoMetadata;
-  onOpenCookies?: () => void;
 }
 
-export const VideoCard: React.FC<VideoCardProps> = ({ video, onOpenCookies }) => {
+export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
   const { t } = useLanguage();
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);

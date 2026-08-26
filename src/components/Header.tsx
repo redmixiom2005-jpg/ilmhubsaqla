@@ -6,32 +6,24 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
-import { Language, ServerHealth } from '../types';
+import { Language } from '../types';
 import {
   Sun,
   Moon,
   History,
-  Activity,
   Globe,
   Check,
-  ChevronDown,
-  Cookie
+  ChevronDown
 } from 'lucide-react';
 
 interface HeaderProps {
   historyCount: number;
   onOpenHistory: () => void;
-  serverHealth: ServerHealth | null;
-  onOpenServerHealth: () => void;
-  onOpenCookies?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   historyCount,
-  onOpenHistory,
-  serverHealth,
-  onOpenServerHealth,
-  onOpenCookies
+  onOpenHistory
 }) => {
   const { language, setLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
@@ -45,37 +37,6 @@ export const Header: React.FC<HeaderProps> = ({
   ];
 
   const currentLangObj = languages.find((l) => l.code === language) || languages[0];
-
-  const getHealthBadge = () => {
-    if (!serverHealth) {
-      return {
-        color: 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300 dark:border-amber-800',
-        dot: 'bg-amber-500',
-        text: t.serverDegraded
-      };
-    }
-    if (serverHealth.status === 'healthy') {
-      return {
-        color: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800',
-        dot: 'bg-emerald-500 animate-pulse',
-        text: t.serverHealthy
-      };
-    }
-    if (serverHealth.status === 'degraded') {
-      return {
-        color: 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300 dark:border-amber-800',
-        dot: 'bg-amber-500',
-        text: t.serverDegraded
-      };
-    }
-    return {
-      color: 'bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 border-rose-300 dark:border-rose-800',
-      dot: 'bg-rose-500',
-      text: t.serverOffline
-    };
-  };
-
-  const healthBadge = getHealthBadge();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md transition-colors">
@@ -98,41 +59,12 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white truncate">
                 {t.appName}
               </span>
-              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 dark:bg-blue-950/80 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                PRO
-              </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 truncate hidden md:block">
-              {t.appSlogan}
-            </p>
           </div>
         </div>
 
-        {/* Action Controls: Cookies, Server Health, History, Language, Theme */}
+        {/* Action Controls: History, Language, Theme */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Cookies Setup Button */}
-          {onOpenCookies && (
-            <button
-              onClick={onOpenCookies}
-              title="YouTube Cookies (Anti-bot sozlash)"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-amber-300/80 dark:border-amber-800/80 bg-amber-50/80 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 text-xs font-semibold hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all"
-            >
-              <Cookie className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-              <span className="hidden sm:inline">Cookies</span>
-            </button>
-          )}
-
-          {/* Server Health Status Pill */}
-          <button
-            onClick={onOpenServerHealth}
-            title={t.serverStatus}
-            className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all hover:scale-[1.02] active:scale-[0.98] ${healthBadge.color}`}
-          >
-            <span className={`w-2 h-2 rounded-full ${healthBadge.dot}`} />
-            <span className="hidden md:inline">{healthBadge.text}</span>
-            <Activity className="w-3.5 h-3.5 opacity-70" />
-          </button>
-
           {/* History Button */}
           <button
             onClick={onOpenHistory}

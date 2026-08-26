@@ -14,11 +14,20 @@
     <meta property="og:image" content="/logo.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="IlmHub Saqla Bot" />
-    <meta name="twitter:description" content="IlmHub — Ilmlilar yetishib chiqadigan maskan !" />
+    <meta name="twitter:description" content="Save YouTube videos and Shorts in your preferred quality." />
     <meta name="theme-color" content="#0056e0" />
   </head>
   <body class="min-h-screen bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
     <div id="root"></div>
+    <script>
+      try {
+        if (localStorage.getItem('ilmhub_theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch {
+        // ThemeProvider applies the default theme when storage is unavailable.
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

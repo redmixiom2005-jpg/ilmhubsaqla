@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Header } from './components/Header';
@@ -14,8 +14,6 @@ import { DownloadManager } from './components/DownloadManager';
 import { DownloadCompleted } from './components/DownloadCompleted';
 import { StorageInfo } from './components/StorageInfo';
 import { HistoryModal } from './components/HistoryModal';
-import { ServerStatusModal } from './components/ServerStatusModal';
-import { CookiesModal } from './components/CookiesModal';
 import { ErrorBanner } from './components/ErrorBanner';
 import { Footer } from './components/Footer';
 import { api } from './services/api';
@@ -29,10 +27,9 @@ import {
   ApiError,
   DownloadJob,
   HistoryItem,
-  ServerHealth,
   VideoMetadata
 } from './types';
-import { Sparkles, Shield, Zap, DownloadCloud } from 'lucide-react';
+import { Shield, Zap, DownloadCloud } from 'lucide-react';
 
 const MainContent: React.FC = () => {
   const { t } = useLanguage();
@@ -50,38 +47,9 @@ const MainContent: React.FC = () => {
 
   const [history, setHistory] = useState<HistoryItem[]>(() => getHistory());
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [isCookiesOpen, setIsCookiesOpen] = useState(false);
-
-  const [serverHealth, setServerHealth] = useState<ServerHealth | null>(null);
-  const [isServerHealthOpen, setIsServerHealthOpen] = useState(false);
-  const [isCheckingHealth, setIsCheckingHealth] = useState(false);
-
   const [error, setError] = useState<ApiError | null>(null);
 
   const pollTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Health check
-  const checkHealth = useCallback(async () => {
-    setIsCheckingHealth(true);
-    const res = await api.healthCheck();
-    if (res.success && res.data) {
-      setServerHealth(res.data);
-    } else {
-      setServerHealth({
-        success: false,
-        service: 'IlmHub Saqla Bot',
-        status: 'unhealthy',
-        ytDlp: false,
-        ffmpeg: false,
-        timestamp: new Date().toISOString()
-      });
-    }
-    setIsCheckingHealth(false);
-  }, []);
-
-  useEffect(() => {
-    checkHealth();
-  }, [checkHealth]);
 
   // Analyze video handler
   const handleAnalyze = async () => {
@@ -273,20 +241,12 @@ const MainContent: React.FC = () => {
       <Header
         historyCount={history.length}
         onOpenHistory={() => setIsHistoryOpen(true)}
-        serverHealth={serverHealth}
-        onOpenServerHealth={() => setIsServerHealthOpen(true)}
-        onOpenCookies={() => setIsCookiesOpen(true)}
       />
 
       {/* Main Container */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 flex flex-col gap-6 sm:gap-8">
         {/* Hero Section */}
         <div className="flex flex-col items-center text-center gap-3 py-2 sm:py-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-semibold shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>{t.appSlogan}</span>
-          </div>
-
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-2xl leading-tight">
             {t.tagline}
           </h1>
@@ -298,7 +258,6 @@ const MainContent: React.FC = () => {
             error={error}
             onDismiss={() => setError(null)}
             onRetry={handleAnalyze}
-            onOpenCookies={() => setIsCookiesOpen(true)}
           />
         )}
 
@@ -328,7 +287,7 @@ const MainContent: React.FC = () => {
         {/* Video Card and Quality Selector (if analyzed and not in completed state) */}
         {videoMetadata && (!activeJob || activeJob.status === 'cancelled' || activeJob.status === 'failed') && (
           <div className="flex flex-col gap-5">
-            <VideoCard video={videoMetadata} onOpenCookies={() => setIsCookiesOpen(true)} />
+            <VideoCard video={videoMetadata} />
             <QualitySelector
               video={videoMetadata}
               selectedQuality={selectedQuality}
@@ -391,21 +350,6 @@ const MainContent: React.FC = () => {
         onSelectVideo={handleSelectHistoryItem}
       />
 
-      {/* Server Diagnostics Modal */}
-      <ServerStatusModal
-        isOpen={isServerHealthOpen}
-        onClose={() => setIsServerHealthOpen(false)}
-        serverHealth={serverHealth}
-        onRefreshHealth={checkHealth}
-        isChecking={isCheckingHealth}
-      />
-
-      {/* YouTube Cookies Modal */}
-      <CookiesModal
-        isOpen={isCookiesOpen}
-        onClose={() => setIsCookiesOpen(false)}
-        onCookiesUpdated={checkHealth}
-      />
     </div>
   );
 };

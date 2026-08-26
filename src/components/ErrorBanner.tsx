@@ -6,20 +6,18 @@
 import React from 'react';
 import { ApiError } from '../types';
 import { useLanguage } from '../context/LanguageContext';
-import { AlertCircle, X, RefreshCw, Cookie } from 'lucide-react';
+import { AlertCircle, X, RefreshCw } from 'lucide-react';
 
 interface ErrorBannerProps {
   error: ApiError | null;
   onDismiss: () => void;
   onRetry?: () => void;
-  onOpenCookies?: () => void;
 }
 
 export const ErrorBanner: React.FC<ErrorBannerProps> = ({
   error,
   onDismiss,
-  onRetry,
-  onOpenCookies
+  onRetry
 }) => {
   const { t } = useLanguage();
 
@@ -28,7 +26,6 @@ export const ErrorBanner: React.FC<ErrorBannerProps> = ({
   // Retrieve translated message by code or fallback
   const errorCode = error.code as keyof typeof t.errors;
   const localizedMsg = t.errors[errorCode] || error.message || t.errors.INTERNAL_ERROR;
-  const isBotError = error.code === 'BOT_DETECTION_ERROR' || (error.message && error.message.includes('cookies'));
 
   return (
     <div className="w-full rounded-3xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/80 p-4 sm:p-5 shadow-lg shadow-rose-500/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
@@ -41,11 +38,6 @@ export const ErrorBanner: React.FC<ErrorBannerProps> = ({
             <h4 className="font-bold text-sm text-rose-900 dark:text-rose-200">
               {t.errorTitle}
             </h4>
-            {isBotError && (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
-                YouTube Bot Himoyasi
-              </span>
-            )}
           </div>
           <p className="text-xs sm:text-sm text-rose-700 dark:text-rose-300 mt-0.5 leading-relaxed break-words">
             {localizedMsg}
@@ -59,16 +51,6 @@ export const ErrorBanner: React.FC<ErrorBannerProps> = ({
       </div>
 
       <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0 flex-wrap">
-        {onOpenCookies && (
-          <button
-            type="button"
-            onClick={onOpenCookies}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs shadow-md shadow-amber-500/20 transition-all"
-          >
-            <Cookie className="w-3.5 h-3.5" />
-            <span>Cookies sozlash</span>
-          </button>
-        )}
         {onRetry && (
           <button
             type="button"
