@@ -30,7 +30,7 @@ export const ErrorBanner: React.FC<ErrorBannerProps> = ({
   return (
     <div className="w-full rounded-3xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/80 p-4 sm:p-5 shadow-lg shadow-rose-500/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
       <div className="flex items-start gap-3 min-w-0">
-        <div className="p-2 rounded-2xl bg-rose-100 dark:bg-rose-900/80 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5 sm:mt-0">
+        <div className="p-2 rounded-2xl bg-rose-100 dark:bg-rose-900/80 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5 sm:mt-0">
           <AlertCircle className="w-5 h-5" />
         </div>
         <div className="flex flex-col min-w-0">
@@ -39,7 +39,7 @@ export const ErrorBanner: React.FC<ErrorBannerProps> = ({
               {t.errorTitle}
             </h4>
           </div>
-          <p className="text-xs sm:text-sm text-rose-700 dark:text-rose-300 mt-0.5 leading-relaxed break-words">
+          <p className="text-xs sm:text-sm text-rose-700 dark:text-rose-300 mt-0.5 leading-relaxed wrap-break-word">
             {localizedMsg}
           </p>
           {error.details && error.details !== localizedMsg && (
@@ -50,7 +50,7 @@ export const ErrorBanner: React.FC<ErrorBannerProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0 flex-wrap">
+      <div className="flex items-center gap-2 self-end sm:self-center shrink-0 flex-wrap">
         {onRetry && (
           <button
             type="button"

@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
         {/* Brand & Slogan */}
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl overflow-hidden shadow-sm border border-blue-600/20 bg-blue-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-xl overflow-hidden shadow-sm border border-blue-600/20 bg-blue-600 flex items-center justify-center">
               <img
                 src="/logo.svg"
                 alt="IlmHub"
@@ -35,7 +35,7 @@ export const Footer: React.FC = () => {
 
         {/* Legal & Usage Notice Box */}
         <div className="w-full max-w-2xl px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-          <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+          <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
           <span>{t.legalNotice}</span>
         </div>
 

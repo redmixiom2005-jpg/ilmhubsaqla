@@ -101,7 +101,7 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   {/* Thumbnail / Icon */}
-                  <div className="relative w-16 h-11 rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-700 flex-shrink-0 flex items-center justify-center">
+                  <div className="relative w-16 h-11 rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-700 shrink-0 flex items-center justify-center">
                     {item.thumbnail ? (
                       <img
                         src={item.thumbnail}
@@ -134,7 +134,7 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
+                <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
                   {item.downloadUrl && (
                     <a
                       href={item.downloadUrl}
@@ -165,7 +165,7 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
         {showClearConfirm && (
           <div className="p-4 bg-rose-50 dark:bg-rose-950/60 border-t border-rose-200 dark:border-rose-900 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-rose-700 dark:text-rose-300 text-xs">
-              <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                  <AlertTriangle className="w-4 h-4 shrink-0" />
               <span>{t.clearHistoryConfirmMsg}</span>
             </div>
             <div className="flex items-center gap-2">

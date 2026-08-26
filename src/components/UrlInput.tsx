@@ -120,7 +120,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({
             id="analyze-submit-button"
             onClick={onAnalyze}
             disabled={!url.trim() || isAnalyzing || disabled}
-            className="flex-shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-2xl font-semibold text-sm sm:text-base text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-blue-600/25 hover:shadow-blue-600/35 transition-all"
+            className="shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-2xl font-semibold text-sm sm:text-base text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-blue-600/25 hover:shadow-blue-600/35 transition-all"
           >
             {isAnalyzing ? (
               <>

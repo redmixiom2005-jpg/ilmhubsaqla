@@ -209,8 +209,12 @@ apiRouter.get('/download/:jobId/file', (req: Request, res: Response) => {
   const stat = fs.statSync(filePath);
   const rawFileName = path.basename(filePath);
   // Remove internal prefix like ilmhub_uuid_ from public download name
-  const cleanFileName = rawFileName.replace(/^ilmhub_[a-zA-Z0-9_-]+_/, '') || 'video.mp4';
+  const cleanFileName = (rawFileName
+    .replace(/^ilmhub_[a-zA-Z0-9_-]+_/, '')
+    .replace(/[\r\n"\\/]/g, '')
+    .trim()) || 'video.mp4';
   const encodedName = encodeURIComponent(cleanFileName).replace(/['()]/g, escape).replace(/\*/g, '%2A');
+  const fallbackName = cleanFileName.replace(/[^a-zA-Z0-9._ -]/g, '') || 'ilmhub-video.mp4';
 
   const ext = path.extname(filePath).toLowerCase();
   let contentType = 'application/octet-stream';
@@ -222,7 +226,7 @@ apiRouter.get('/download/:jobId/file', (req: Request, res: Response) => {
   res.writeHead(200, {
     'Content-Type': contentType,
     'Content-Length': stat.size,
-    'Content-Disposition': `attachment; filename="${cleanFileName.replace(/"/g, '')}"; filename*=UTF-8''${encodedName}`,
+    'Content-Disposition': `attachment; filename="${fallbackName}"; filename*=UTF-8''${encodedName}`,
     'Cache-Control': 'no-cache'
   });
 

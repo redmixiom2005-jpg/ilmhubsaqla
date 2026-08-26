@@ -118,7 +118,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
           {/* Right Column: Metadata Details (12 on mobile, 7 on desktop) */}
           <div className="lg:col-span-7 flex flex-col gap-3 min-w-0">
             {/* Title */}
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-slate-900 dark:text-white leading-snug break-words">
+            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-slate-900 dark:text-white leading-snug wrap-break-word">
               {video.title}
             </h2>
 
@@ -126,26 +126,26 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
               {/* Channel info */}
               <div className="flex items-center gap-1.5 font-medium text-blue-600 dark:text-blue-400">
-                <User className="w-4 h-4 flex-shrink-0" />
+                <User className="w-4 h-4 shrink-0" />
                 {video.channelUrl ? (
                   <a
                     href={video.channelUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline flex items-center gap-1 truncate max-w-[200px]"
+                    className="hover:underline flex items-center gap-1 truncate max-w-50"
                   >
                     <span className="truncate">{video.channel}</span>
-                    <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                    <ExternalLink className="w-3 h-3 shrink-0" />
                   </a>
                 ) : (
-                  <span className="truncate max-w-[200px]">{video.channel}</span>
+                  <span className="truncate max-w-50">{video.channel}</span>
                 )}
               </div>
 
               {/* Views count */}
               {video.viewCountFormatted && (
                 <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                  <Eye className="w-4 h-4 flex-shrink-0" />
+                  <Eye className="w-4 h-4 shrink-0" />
                   <span>{video.viewCountFormatted} {t.views.toLowerCase()}</span>
                 </div>
               )}
@@ -153,7 +153,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
               {/* Published date */}
               {video.uploadDate && (
                 <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                  <Calendar className="w-4 h-4 flex-shrink-0" />
+                  <Calendar className="w-4 h-4 shrink-0" />
                   <span>{video.uploadDate}</span>
                 </div>
               )}
@@ -176,7 +176,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
                   </button>
                 </div>
                 <div
-                  className={`text-xs text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line break-words ${
+                  className={`text-xs text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line wrap-break-word ${
                     !showDesc ? 'line-clamp-3' : 'max-h-80 overflow-y-auto pr-1'
                   }`}
                 >

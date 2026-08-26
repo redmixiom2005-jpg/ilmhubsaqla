@@ -204,7 +204,7 @@ export const CookiesModal: React.FC<CookiesModalProps> = ({
                   : 'bg-rose-50 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
               }`}
             >
-              {message.type === 'success' ? <ShieldCheck className="w-4 h-4 flex-shrink-0" /> : <AlertTriangle className="w-4 h-4 flex-shrink-0" />}
+              {message.type === 'success' ? <ShieldCheck className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
               <span>{message.text}</span>
             </div>
           )}
@@ -291,7 +291,7 @@ export const CookiesModal: React.FC<CookiesModalProps> = ({
           {/* 3-Step Guide */}
           <div className="p-4 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/40 flex flex-col gap-2.5 text-xs text-amber-900 dark:text-amber-200">
             <div className="flex items-center gap-2 font-bold text-amber-800 dark:text-amber-300">
-              <Info className="w-4 h-4 flex-shrink-0" />
+              <Info className="w-4 h-4 shrink-0" />
               <span>Cookies.txt faylini 1 daqiqada qanday olish mumkin?</span>
             </div>
             <ol className="list-decimal list-inside space-y-1.5 text-[11px] leading-relaxed text-amber-900/90 dark:text-amber-200/90 pl-1">

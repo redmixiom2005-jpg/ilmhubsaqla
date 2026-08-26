@@ -43,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-3">
         {/* Brand Logo & Title */}
         <div className="flex items-center gap-3 min-w-0">
-          <div className="relative flex-shrink-0 w-11 h-11 rounded-2xl overflow-hidden shadow-md shadow-blue-500/10 border border-blue-600/20 bg-blue-600 flex items-center justify-center">
+          <div className="relative shrink-0 w-11 h-11 rounded-2xl overflow-hidden shadow-md shadow-blue-500/10 border border-blue-600/20 bg-blue-600 flex items-center justify-center">
             <img
               src="/logo.svg"
               alt="IlmHub Logo"
