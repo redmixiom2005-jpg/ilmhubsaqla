@@ -120,7 +120,8 @@ export type ApiErrorCode =
   | 'RATE_LIMITED'
   | 'JOB_NOT_FOUND'
   | 'DOWNLOAD_CANCELLED'
-  | 'INTERNAL_ERROR';
+  | 'INTERNAL_ERROR'
+  | 'FORMAT_CONVERSION_FAILED';
 
 export interface ApiError {
   code: ApiErrorCode | string;

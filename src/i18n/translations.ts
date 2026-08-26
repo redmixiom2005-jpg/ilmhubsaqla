@@ -82,6 +82,7 @@ export interface Translations {
     JOB_NOT_FOUND: string;
     DOWNLOAD_CANCELLED: string;
     INTERNAL_ERROR: string;
+    FORMAT_CONVERSION_FAILED: string;
     NETWORK_ERROR: string;
     SERVER_OFFLINE: string;
     EMPTY_URL: string;
@@ -180,6 +181,7 @@ export const translations: Record<Language, Translations> = {
       JOB_NOT_FOUND: 'Yuklash vazifasi topilmadi yoki muddati tugagan.',
       DOWNLOAD_CANCELLED: 'Yuklash foydalanuvchi tomonidan bekor qilindi.',
       INTERNAL_ERROR: 'Server ichki xatoligi yuz berdi.',
+      FORMAT_CONVERSION_FAILED: 'Tanlangan video formatini tayyorlashda xatolik yuz berdi. Universal yoki H.264 MP4 formatini tanlab qayta urinib ko‘ring.',
       NETWORK_ERROR: 'Tarmoq xatosi. Server bilan bog‘lanib bo‘lmadi.',
       SERVER_OFFLINE: 'Yuklash serveri bilan aloqa o‘rnatilmadi. Iltimos, backend ishlab turganini tekshiring.',
       EMPTY_URL: 'Iltimos, YouTube video havolasini kiriting.',
@@ -276,6 +278,7 @@ export const translations: Record<Language, Translations> = {
       JOB_NOT_FOUND: 'Задача загрузки не найдена или истекла.',
       DOWNLOAD_CANCELLED: 'Загрузка отменена пользователем.',
       INTERNAL_ERROR: 'Внутренняя ошибка сервера.',
+      FORMAT_CONVERSION_FAILED: 'Не удалось подготовить выбранный формат видео. Попробуйте Universal или H.264 MP4.',
       NETWORK_ERROR: 'Ошибка сети. Не удалось связаться с сервером.',
       SERVER_OFFLINE: 'Сервер загрузки недоступен. Проверьте статус backend сервера.',
       EMPTY_URL: 'Пожалуйста, введите ссылку на видео YouTube.',
@@ -372,6 +375,7 @@ export const translations: Record<Language, Translations> = {
       JOB_NOT_FOUND: 'Download job not found or expired.',
       DOWNLOAD_CANCELLED: 'Download was cancelled by user.',
       INTERNAL_ERROR: 'Internal server error occurred.',
+      FORMAT_CONVERSION_FAILED: 'The selected video format could not be prepared. Try Universal or H.264 MP4.',
       NETWORK_ERROR: 'Network error. Could not connect to the downloader backend.',
       SERVER_OFFLINE: 'Downloader backend is offline. Please verify the server is running.',
       EMPTY_URL: 'Please enter a YouTube video URL.',
@@ -468,6 +472,7 @@ export const translations: Record<Language, Translations> = {
       JOB_NOT_FOUND: 'Юклаш вазифаси топилмади ёки муддати тугаган.',
       DOWNLOAD_CANCELLED: 'Юклаш фойдаланувчи томонидан бекор қилинди.',
       INTERNAL_ERROR: 'Сервер ички хатолиги юз берди.',
+      FORMAT_CONVERSION_FAILED: 'Танланган видео форматини тайёрлашда хатолик юз берди. Universal ёки H.264 MP4 ни танлаб қайта уриниб кўринг.',
       NETWORK_ERROR: 'Тармоқ хатоси. Сервер билан боғланиб бўлмади.',
       SERVER_OFFLINE: 'Юклаш сервери билан алоқа ўрнатилмади. Илтимос, backend ишлаб турганини текширинг.',
       EMPTY_URL: 'Илтимос, YouTube видео ҳаволасини киритинг.',
