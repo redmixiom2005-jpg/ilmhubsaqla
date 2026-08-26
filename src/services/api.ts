@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ApiResponse, DownloadJob, ServerHealth, VideoMetadata } from '../types';
+import { ApiResponse, DeviceFormat, DownloadJob, ServerHealth, VideoMetadata } from '../types';
 
 export interface CookieStatus {
   hasCookies: boolean;
@@ -97,6 +97,7 @@ class ApiClient {
     quality: string;
     format: string;
     formatId?: string;
+    deviceFormat?: DeviceFormat;
     title?: string;
   }): Promise<ApiResponse<DownloadJob>> {
     return this.request<DownloadJob>('/api/download', {

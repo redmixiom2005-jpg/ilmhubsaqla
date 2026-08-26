@@ -19,6 +19,13 @@ export interface Translations {
   youtubeShorts: string;
   qualityTitle: string;
   formatTitle: string;
+  deviceFormatTitle: string;
+  iosH264: string;
+  iosHevc: string;
+  androidMp4: string;
+  windowsMp4: string;
+  macosMp4: string;
+  universalMp4: string;
   audioOnly: string;
   downloadBtn: string;
   downloading: string;
@@ -110,6 +117,13 @@ export const translations: Record<Language, Translations> = {
     youtubeShorts: 'YouTube Shorts',
     qualityTitle: 'Video sifati',
     formatTitle: 'Format',
+    deviceFormatTitle: 'Qurilma / Format',
+    iosH264: 'iPhone / iPad — H.264 MP4',
+    iosHevc: 'iPhone / iPad — HEVC / H.265 MP4',
+    androidMp4: 'Android — MP4',
+    windowsMp4: 'Windows — MP4',
+    macosMp4: 'macOS — MP4',
+    universalMp4: 'Universal — MP4',
     audioOnly: 'Faqat audio (MP3)',
     downloadBtn: 'Yuklab olishni boshlash',
     downloading: 'Yuklanmoqda...',
@@ -199,6 +213,13 @@ export const translations: Record<Language, Translations> = {
     youtubeShorts: 'YouTube Shorts',
     qualityTitle: 'Качество видео',
     formatTitle: 'Формат',
+    deviceFormatTitle: 'Устройство / Формат',
+    iosH264: 'iPhone / iPad — H.264 MP4',
+    iosHevc: 'iPhone / iPad — HEVC / H.265 MP4',
+    androidMp4: 'Android — MP4',
+    windowsMp4: 'Windows — MP4',
+    macosMp4: 'macOS — MP4',
+    universalMp4: 'Универсальный — MP4',
     audioOnly: 'Только аудио (MP3)',
     downloadBtn: 'Начать скачивание',
     downloading: 'Скачивание...',
@@ -288,6 +309,13 @@ export const translations: Record<Language, Translations> = {
     youtubeShorts: 'YouTube Shorts',
     qualityTitle: 'Video Quality',
     formatTitle: 'Format',
+    deviceFormatTitle: 'Device / Format',
+    iosH264: 'iPhone / iPad — H.264 MP4',
+    iosHevc: 'iPhone / iPad — HEVC / H.265 MP4',
+    androidMp4: 'Android — MP4',
+    windowsMp4: 'Windows — MP4',
+    macosMp4: 'macOS — MP4',
+    universalMp4: 'Universal — MP4',
     audioOnly: 'Audio Only (MP3)',
     downloadBtn: 'Start Download',
     downloading: 'Downloading...',
@@ -377,6 +405,13 @@ export const translations: Record<Language, Translations> = {
     youtubeShorts: 'YouTube Shorts',
     qualityTitle: 'Видео сифати',
     formatTitle: 'Формат',
+    deviceFormatTitle: 'Қурилма / Формат',
+    iosH264: 'iPhone / iPad — H.264 MP4',
+    iosHevc: 'iPhone / iPad — HEVC / H.265 MP4',
+    androidMp4: 'Android — MP4',
+    windowsMp4: 'Windows — MP4',
+    macosMp4: 'macOS — MP4',
+    universalMp4: 'Универсал — MP4',
     audioOnly: 'Фақат аудио (MP3)',
     downloadBtn: 'Юклаб олишни бошлаш',
     downloading: 'Юкланмоқда...',

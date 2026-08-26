@@ -3,18 +3,33 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ChildProcess, spawn } from 'child_process';
+import { ChildProcess, execFile, spawn } from 'child_process';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { DownloadJob, DownloadJobStatus } from '../types';
+import { promisify } from 'util';
+import { DeviceFormat, DownloadJob, DownloadJobStatus } from '../types';
 import { config } from './config';
 import { formatBytes } from './ytdlp';
+
+const execFileAsync = promisify(execFile);
 
 interface ActiveJobProcess {
   job: DownloadJob;
   process?: ChildProcess;
   targetFilePrefix: string;
+}
+
+interface MediaProbe {
+  format?: { format_name?: string; duration?: string };
+  streams?: Array<{
+    codec_type?: string;
+    codec_name?: string;
+    codec_tag_string?: string;
+    width?: number;
+    height?: number;
+    r_frame_rate?: string;
+  }>;
 }
 
 class DownloadJobManager {
@@ -35,6 +50,7 @@ class DownloadJobManager {
     quality: string;
     format: string;
     formatId?: string;
+    deviceFormat?: DeviceFormat;
     title?: string;
   }): DownloadJob {
     const id = crypto.randomUUID();
@@ -47,6 +63,7 @@ class DownloadJobManager {
       quality: params.quality || '720p',
       format: params.format || 'mp4',
       formatId: params.formatId,
+      deviceFormat: params.deviceFormat,
       status: 'queued',
       progress: 0,
       createdAt: now,
@@ -216,7 +233,7 @@ class DownloadJobManager {
         this.finishJob(job.id, filePrefix);
       });
 
-      child.on('close', (code) => {
+      child.on('close', async (code) => {
         clearTimeout(timeout);
         if (timedOut) {
           this.finishJob(job.id, filePrefix);
@@ -231,21 +248,43 @@ class DownloadJobManager {
           // Find generated file
           const completedFilename = this.findGeneratedFile(filePrefix);
           if (completedFilename) {
-            const completedPath = path.join(config.downloadDir, completedFilename);
-            const fileStats = fs.statSync(completedPath);
-            const extension = path.extname(completedFilename).slice(1).toLowerCase();
-            job.status = 'completed';
-            job.progress = 100;
-            job.filename = completedFilename;
-            job.downloadUrl = `/api/download/${job.id}/file`;
-            job.filesizeBytes = fileStats.size;
-            job.filesize = formatBytes(fileStats.size);
-            job.total = job.filesize;
-            job.extension = extension;
-            job.mimeType = extension === 'mp3' ? 'audio/mpeg' : extension === 'webm' ? 'video/webm' : 'video/mp4';
-            job.resolution = job.quality === 'audio' ? undefined : job.quality;
-            job.updatedAt = Date.now();
-            this.jobs.set(job.id, job);
+            try {
+              const preparedFilename = await this.prepareOutput(job, completedFilename);
+              const completedPath = path.join(config.downloadDir, preparedFilename);
+              const fileStats = fs.statSync(completedPath);
+              const probe = await this.probeMedia(completedPath);
+              const videoStream = probe.streams?.find((stream) => stream.codec_type === 'video');
+              const audioStream = probe.streams?.find((stream) => stream.codec_type === 'audio');
+              const isAudioOutput = job.quality === 'audio' || job.format === 'mp3';
+              if (isAudioOutput ? !audioStream : !videoStream || !audioStream) {
+                throw new Error(isAudioOutput ? 'Final MP3 audio stream was not found' : 'Final MP4 must contain both video and audio streams');
+              }
+              const requestedHeight = Number.parseInt(job.quality, 10);
+              if (!isAudioOutput && videoStream?.height && requestedHeight && videoStream.height < requestedHeight) {
+                throw new Error(`Final video resolution is below the selected ${job.quality} quality`);
+              }
+              const extension = path.extname(preparedFilename).slice(1).toLowerCase();
+              job.status = 'completed';
+              job.progress = 100;
+              job.filename = preparedFilename;
+              job.downloadUrl = `/api/download/${job.id}/file`;
+              job.filesizeBytes = fileStats.size;
+              job.filesize = formatBytes(fileStats.size);
+              job.total = job.filesize;
+              job.extension = extension;
+              job.mimeType = isAudioOutput ? 'audio/mpeg' : 'video/mp4';
+              job.resolution = isAudioOutput ? undefined : videoStream?.height ? `${videoStream.height}p` : job.quality;
+              job.videoCodec = videoStream?.codec_name;
+              job.audioCodec = audioStream.codec_name;
+              job.updatedAt = Date.now();
+              this.jobs.set(job.id, job);
+            } catch (error) {
+              job.status = 'failed';
+              job.error = error instanceof Error ? error.message : 'Final video validation failed';
+              job.errorCode = 'FORMAT_CONVERSION_FAILED';
+              job.updatedAt = Date.now();
+              this.cleanupJobTempFiles(filePrefix);
+            }
           } else {
             job.status = 'failed';
             job.error = 'Downloaded file was not found on server';
@@ -277,6 +316,39 @@ class DownloadJobManager {
       job.errorCode = 'DOWNLOAD_FAILED';
       this.finishJob(job.id, filePrefix);
     }
+  }
+
+  private async probeMedia(filePath: string): Promise<MediaProbe> {
+    const { stdout } = await execFileAsync(config.ffprobePath, [
+      '-v', 'error', '-show_entries', 'format=format_name,duration',
+      '-show_entries', 'stream=codec_type,codec_name,codec_tag_string,width,height,r_frame_rate',
+      '-of', 'json', filePath
+    ], { timeout: 30000, maxBuffer: 1024 * 1024 });
+    return JSON.parse(stdout) as MediaProbe;
+  }
+
+  private async prepareOutput(job: DownloadJob, filename: string): Promise<string> {
+    const isMp4 = job.quality !== 'audio' && job.format !== 'mp3';
+    if (!isMp4 || !job.deviceFormat || ['android', 'windows', 'macos'].includes(job.deviceFormat)) {
+      return filename;
+    }
+
+    const sourcePath = path.join(config.downloadDir, filename);
+    const sourceProbe = await this.probeMedia(sourcePath);
+    const video = sourceProbe.streams?.find((stream) => stream.codec_type === 'video');
+    const audio = sourceProbe.streams?.find((stream) => stream.codec_type === 'audio');
+    const requestedCodec = job.deviceFormat === 'ios-hevc' ? 'hevc' : 'h264';
+    const outputFilename = `${filename}.compatible.mp4`;
+    const outputPath = path.join(config.downloadDir, outputFilename);
+    const canRemux = video?.codec_name === requestedCodec && audio?.codec_name === 'aac' && sourceProbe.format?.format_name?.split(',').includes('mov');
+    const ffmpegArgs = canRemux
+      ? ['-y', '-i', sourcePath, '-map', '0:v:0', '-map', '0:a:0', '-c', 'copy', ...(requestedCodec === 'hevc' ? ['-tag:v', 'hvc1'] : []), '-movflags', '+faststart', outputPath]
+      : ['-y', '-i', sourcePath, '-map', '0:v:0', '-map', '0:a:0', '-c:v', requestedCodec === 'hevc' ? 'libx265' : 'libx264', ...(requestedCodec === 'hevc' ? ['-tag:v', 'hvc1'] : []), '-preset', 'veryfast', '-crf', requestedCodec === 'hevc' ? '28' : '23', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '128k', '-movflags', '+faststart', outputPath];
+
+    await execFileAsync(config.ffmpegPath, ffmpegArgs, { timeout: config.downloadTimeoutMs, maxBuffer: 2 * 1024 * 1024 });
+    fs.unlinkSync(sourcePath);
+    fs.renameSync(outputPath, sourcePath);
+    return filename;
   }
 
   private parseYtDlpOutput(job: DownloadJob, output: string) {

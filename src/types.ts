@@ -5,6 +5,7 @@
 
 export type Language = 'uz' | 'ru' | 'en' | 'krill';
 export type Theme = 'light' | 'dark';
+export type DeviceFormat = 'ios-h264' | 'ios-hevc' | 'android' | 'windows' | 'macos' | 'universal';
 
 export type DownloadJobStatus =
   | 'queued'
@@ -27,6 +28,7 @@ export interface VideoQualityOption {
   isAudioOnly?: boolean;
   ext: 'mp4' | 'mp3' | 'm4a' | 'webm';
   formatId?: string;
+  deviceFormat?: DeviceFormat;
 }
 
 export interface VideoMetadata {
@@ -70,6 +72,7 @@ export interface DownloadJob {
   fps?: number;
   videoCodec?: string;
   audioCodec?: string;
+  deviceFormat?: DeviceFormat;
   filename?: string;
   downloadUrl?: string;
   error?: string;

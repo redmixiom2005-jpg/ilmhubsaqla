@@ -25,11 +25,22 @@ import {
 } from './services/history';
 import {
   ApiError,
+  DeviceFormat,
   DownloadJob,
   HistoryItem,
   VideoMetadata
 } from './types';
 import { Shield, Zap, DownloadCloud } from 'lucide-react';
+
+function getDefaultDeviceFormat(): DeviceFormat {
+  if (typeof navigator === 'undefined') return 'universal';
+  const userAgent = navigator.userAgent.toLowerCase();
+  if (/iphone|ipad|ipod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'ios-h264';
+  if (/android/.test(userAgent)) return 'android';
+  if (/windows/.test(userAgent)) return 'windows';
+  if (/macintosh|mac os/.test(userAgent)) return 'macos';
+  return 'universal';
+}
 
 const MainContent: React.FC = () => {
   const { t } = useLanguage();
@@ -39,6 +50,7 @@ const MainContent: React.FC = () => {
   const [videoMetadata, setVideoMetadata] = useState<VideoMetadata | null>(null);
   const [selectedQuality, setSelectedQuality] = useState<string>('720p');
   const [selectedFormat, setSelectedFormat] = useState<string>('mp4');
+  const [deviceFormat, setDeviceFormat] = useState<DeviceFormat>(getDefaultDeviceFormat);
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isStartingDownload, setIsStartingDownload] = useState(false);
@@ -116,6 +128,7 @@ const MainContent: React.FC = () => {
         url: videoMetadata.url,
         quality: selectedQuality,
         format: selectedFormat,
+        deviceFormat: selectedFormat === 'mp4' ? deviceFormat : undefined,
         formatId: videoMetadata.availableQualities.find((option) => option.quality === selectedQuality)?.formatId,
         title: videoMetadata.title
       });
@@ -294,6 +307,8 @@ const MainContent: React.FC = () => {
               onSelectQuality={setSelectedQuality}
               selectedFormat={selectedFormat}
               onSelectFormat={setSelectedFormat}
+              deviceFormat={deviceFormat}
+              onSelectDeviceFormat={setDeviceFormat}
               onStartDownload={handleStartDownload}
               isStarting={isStartingDownload}
             />

@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { VideoMetadata, VideoQualityOption } from '../types';
+import { DeviceFormat, VideoMetadata, VideoQualityOption } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import {
   Download,
@@ -22,6 +22,8 @@ interface QualitySelectorProps {
   onSelectQuality: (quality: string) => void;
   selectedFormat: string;
   onSelectFormat: (format: string) => void;
+  deviceFormat: DeviceFormat;
+  onSelectDeviceFormat: (format: DeviceFormat) => void;
   onStartDownload: () => void;
   isStarting: boolean;
 }
@@ -32,12 +34,22 @@ export const QualitySelector: React.FC<QualitySelectorProps> = ({
   onSelectQuality,
   selectedFormat,
   onSelectFormat,
+  deviceFormat,
+  onSelectDeviceFormat,
   onStartDownload,
   isStarting
 }) => {
   const { t } = useLanguage();
 
   const isAudioSelected = selectedQuality === 'audio' || selectedFormat === 'mp3';
+  const deviceFormats: Array<{ value: DeviceFormat; label: string }> = [
+    { value: 'ios-h264', label: `🍎 ${t.iosH264}` },
+    { value: 'ios-hevc', label: `🍎 ${t.iosHevc}` },
+    { value: 'android', label: `🤖 ${t.androidMp4}` },
+    { value: 'windows', label: `💻 ${t.windowsMp4}` },
+    { value: 'macos', label: `🍏 ${t.macosMp4}` },
+    { value: 'universal', label: `🌐 ${t.universalMp4}` }
+  ];
 
   return (
     <div className="w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 sm:p-6 shadow-xl shadow-blue-500/5 transition-all">
@@ -91,6 +103,21 @@ export const QualitySelector: React.FC<QualitySelectorProps> = ({
               </button>
             </div>
           </div>
+
+          <label className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <span>{t.deviceFormatTitle}:</span>
+            <select
+              value={deviceFormat}
+              disabled={isAudioSelected}
+              onChange={(event) => onSelectDeviceFormat(event.target.value as DeviceFormat)}
+              className="max-w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 disabled:opacity-50"
+              aria-label={t.deviceFormatTitle}
+            >
+              {deviceFormats.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </label>
         </div>
 
         {/* Quality Options Grid */}

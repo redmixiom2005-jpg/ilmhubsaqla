@@ -38,6 +38,17 @@ const findFfmpeg = (): string => {
   return 'ffmpeg';
 };
 
+const findFfprobe = (): string => {
+  if (process.env.FFPROBE_PATH && fs.existsSync(process.env.FFPROBE_PATH)) {
+    return process.env.FFPROBE_PATH;
+  }
+  const usrBinFfprobe = '/usr/bin/ffprobe';
+  if (fs.existsSync(usrBinFfprobe)) {
+    return usrBinFfprobe;
+  }
+  return 'ffprobe';
+};
+
 const getDownloadDir = (): string => {
   if (process.env.NODE_ENV === 'production') {
     return '/tmp/ilmhub-saqla';
@@ -82,6 +93,7 @@ export const config = {
   retentionHours: parseInt(process.env.DOWNLOAD_RETENTION_HOURS || '24', 10),
   ytDlpPath: findYtDlp(),
   ffmpegPath: findFfmpeg(),
+  ffprobePath: findFfprobe(),
   getCookieFile
 };
 

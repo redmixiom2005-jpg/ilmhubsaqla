@@ -7,6 +7,7 @@ import { Router, Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
 import { config } from './config';
+import { DeviceFormat } from '../types';
 import { checkSystemDependencies, fetchVideoMetadata } from './ytdlp';
 import { validateYouTubeUrl } from './validator';
 import { jobManager } from './jobManager';
@@ -99,7 +100,7 @@ apiRouter.post('/analyze', async (req: Request, res: Response) => {
 // 3. POST /api/download
 apiRouter.post('/download', async (req: Request, res: Response) => {
   try {
-    const { url, quality, format, formatId, title } = req.body;
+    const { url, quality, format, formatId, title, deviceFormat } = req.body;
 
     const validation = validateYouTubeUrl(url);
     if (!validation.isValid || !validation.cleanUrl) {
@@ -113,11 +114,17 @@ apiRouter.post('/download', async (req: Request, res: Response) => {
       return;
     }
 
+    const validDeviceFormats: DeviceFormat[] = ['ios-h264', 'ios-hevc', 'android', 'windows', 'macos', 'universal'];
+    const selectedDeviceFormat = typeof deviceFormat === 'string' && validDeviceFormats.includes(deviceFormat as DeviceFormat)
+      ? deviceFormat as DeviceFormat
+      : undefined;
+
     const job = jobManager.createJob({
       url: validation.cleanUrl,
       quality: quality || '720p',
       format: format || 'mp4',
       formatId: typeof formatId === 'string' && /^[a-zA-Z0-9_.+-]+$/.test(formatId) ? formatId : undefined,
+      deviceFormat: selectedDeviceFormat,
       title: title || 'YouTube Video'
     });
 
