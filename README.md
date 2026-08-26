@@ -166,17 +166,17 @@ Brauzerda oching: `http://localhost:8080`
 
 `.env.example` faylidan `.env` nusxa oling:
 
-### Frontend uchun (`.env`):
+### Frontend uchun (`.env` yoki Vercel Environment Variables):
 ```env
-# Agar Frontend Vercel'da bo'lsa, Backend server manzili:
-VITE_API_URL=https://your-backend-api.com
+# Railway'da hosil bo'lgan public backend domeni:
+VITE_API_URL=https://ilmhubsaqla-production.up.railway.app
 ```
 
 ### Backend uchun (`.env`):
 ```env
 PORT=8080
 NODE_ENV=production
-FRONTEND_URL=https://your-vercel-app.vercel.app
+FRONTEND_URL=https://your-project.vercel.app
 MAX_CONCURRENT_DOWNLOADS=2
 DOWNLOAD_TIMEOUT_MS=1800000
 DOWNLOAD_RETENTION_HOURS=24
@@ -191,11 +191,11 @@ DOWNLOAD_RETENTION_HOURS=24
 3. Repozitoriyani import qiling.
 4. **Project Settings** da quyidagilarni sozlang:
    - **Framework Preset:** `Vite`
-   - **Build Command:** `npm run build:client` (yoki `vite build`)
+   - **Build Command:** `npm run build:client`
    - **Output Directory:** `dist`
    - **Install Command:** `npm install`
 5. **Environment Variables** bo'limiga qo'shing:
-   - `VITE_API_URL` = `https://your-backend-server.com`
+   - `VITE_API_URL` = Railway service’ning **Public Domain** qiymati, masalan `https://ilmhubsaqla-production.up.railway.app`
 6. **Deploy** tugmasini bosing.
 
 `vercel.json` fayli allaqachon sozlangan bo'lib, SPA sahifa yangilanganda 404 xatolik bermaydi.

@@ -11,7 +11,7 @@ export interface CookieStatus {
   message?: string;
 }
 
-// Read API URL from environment, or use relative URL when frontend is served from same server
+// Use a relative URL only when the frontend and backend share the same server.
 const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
 const getFullUrl = (path: string): string => {
@@ -47,10 +47,10 @@ class ApiClient {
         return {
           success: false,
           error: {
-            code: API_BASE_URL ? 'INVALID_BACKEND_RESPONSE' : 'BACKEND_NOT_CONFIGURED',
+            code: 'INVALID_BACKEND_RESPONSE',
             message: API_BASE_URL
               ? `Backend returned a non-JSON response (HTTP ${res.status})`
-              : 'Backend API URL is not configured'
+              : 'Backend API URL is not configured. Set VITE_API_URL in the frontend deployment.'
           }
         };
       }

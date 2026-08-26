@@ -65,7 +65,7 @@ const getCookieFile = (): string | null => {
   if (fs.existsSync(localCookie)) {
     return localCookie;
   }
-  const tmpCookie = path.join(os.tmpdir(), 'cookies.txt');
+  const tmpCookie = path.join(config.downloadDir, 'cookies.txt');
   if (fs.existsSync(tmpCookie)) {
     return tmpCookie;
   }
