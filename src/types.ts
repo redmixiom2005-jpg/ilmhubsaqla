@@ -21,6 +21,7 @@ export interface VideoQualityOption {
   resolution?: string;       // e.g. "1920x1080"
   height?: number;           // e.g. 1080
   estimatedSize?: string;    // e.g. "~45 MB"
+  estimatedSizeBytes?: number;
   isHD?: boolean;
   is4K?: boolean;
   isAudioOnly?: boolean;
@@ -43,6 +44,8 @@ export interface VideoMetadata {
   viewCountFormatted?: string;
   type: 'video' | 'shorts';
   availableQualities: VideoQualityOption[];
+  filesize?: string;
+  filesizeBytes?: number;
 }
 
 export interface DownloadJob {
@@ -59,6 +62,14 @@ export interface DownloadJob {
   eta?: string;              // e.g. "00:15"
   downloaded?: string;       // e.g. "18.4 MB"
   total?: string;            // e.g. "45.2 MB"
+  filesize?: string;
+  filesizeBytes?: number;
+  extension?: string;
+  mimeType?: string;
+  resolution?: string;
+  fps?: number;
+  videoCodec?: string;
+  audioCodec?: string;
   filename?: string;
   downloadUrl?: string;
   error?: string;

@@ -112,6 +112,13 @@ interface YtDlpRawFormat {
   tbr?: number;
 }
 
+function estimateFormatSize(format: YtDlpRawFormat | undefined, duration: number): number {
+  if (!format) return 0;
+  return format.filesize || format.filesize_approx || (format.tbr && duration
+    ? Math.round((format.tbr * 1024 * duration) / 8)
+    : 0) || 0;
+}
+
 interface YtDlpRawMetadata {
   id: string;
   title: string;
@@ -303,8 +310,8 @@ export async function fetchVideoMetadata(cleanUrl: string, isShorts = false): Pr
     for (const f of rawFormats) {
       if (f.height && f.height > 0 && f.vcodec && f.vcodec !== 'none') {
         const current = bestFormatByHeight.get(f.height);
-        const score = (f.ext === 'mp4' ? 1000000 : 0) + (f.acodec === 'none' ? 10000 : 0) + (f.tbr || 0);
-        const currentScore = current ? (current.ext === 'mp4' ? 1000000 : 0) + (current.acodec === 'none' ? 10000 : 0) + (current.tbr || 0) : -1;
+        const score = (f.ext === 'mp4' ? 1000000 : 0) + (f.vcodec?.startsWith('avc1') ? 100000 : 0) + (f.acodec === 'none' ? 10000 : 0) + (f.tbr || 0);
+        const currentScore = current ? (current.ext === 'mp4' ? 1000000 : 0) + (current.vcodec?.startsWith('avc1') ? 100000 : 0) + (current.acodec === 'none' ? 10000 : 0) + (current.tbr || 0) : -1;
         if (!current || score > currentScore) {
           bestFormatByHeight.set(f.height, f);
         }
@@ -312,8 +319,15 @@ export async function fetchVideoMetadata(cleanUrl: string, isShorts = false): Pr
     }
 
     const qualityOptions: VideoQualityOption[] = [];
+    const bestAudioFormat = rawFormats
+      .filter((format) => format.acodec && format.acodec !== 'none')
+      .sort((a, b) => {
+        const aAudioOnly = a.vcodec === 'none' ? 1 : 0;
+        const bAudioOnly = b.vcodec === 'none' ? 1 : 0;
+        return bAudioOnly - aAudioOnly || estimateFormatSize(b, duration) - estimateFormatSize(a, duration);
+      })[0];
     for (const [height, format] of [...bestFormatByHeight.entries()].sort(([a], [b]) => b - a)) {
-      const size = format.filesize || format.filesize_approx || (format.tbr && duration ? Math.round((format.tbr * 1024 * duration) / 8) : 0);
+      const size = estimateFormatSize(format, duration) + (format.acodec === 'none' ? estimateFormatSize(bestAudioFormat, duration) : 0);
       qualityOptions.push({
         quality: `${height}p`,
         label: `${height}p${height >= 2160 ? ' 4K Ultra HD' : height >= 1440 ? ' 2K QHD' : height >= 1080 ? ' Full HD' : height >= 720 ? ' HD' : ' Standard'}`,
@@ -324,7 +338,8 @@ export async function fetchVideoMetadata(cleanUrl: string, isShorts = false): Pr
         isAudioOnly: false,
         ext: 'mp4',
         formatId: format.format_id,
-        estimatedSize: size ? formatBytes(size) : undefined
+        estimatedSize: size ? `~${formatBytes(size)}` : undefined,
+        estimatedSizeBytes: size || undefined
       });
     }
 

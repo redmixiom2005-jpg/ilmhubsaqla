@@ -56,6 +56,9 @@ export interface Translations {
   storageDesc: string;
   serverStorage: string;
   browserDownload: string;
+  iosTitle: string;
+  iosDownloadHint: string;
+  actualSize: string;
   legalNotice: string;
   errorTitle: string;
   errors: {
@@ -144,6 +147,9 @@ export const translations: Record<Language, Translations> = {
     storageDesc: 'Fayllar to‘g‘ridan-to‘g‘ri brauzeringiz orqali qurilmangizning Yuklashlar (Downloads) papkasiga saqlanadi.',
     serverStorage: 'Server xotirasi',
     browserDownload: 'Brauzer yuklamasi',
+    iosTitle: 'iPhone / iPad',
+    iosDownloadHint: 'Yuklab olingan fayl Safari orqali ochiladi. Kerak bo‘lsa Share → Save to Files orqali saqlang.',
+    actualSize: 'Haqiqiy hajm',
     legalNotice: 'Foydalanuvchi faqat yuklab olishga haqli bo‘lgan kontentdan foydalanishi kerak.',
     errorTitle: 'Xatolik yuz berdi',
     errors: {
@@ -230,6 +236,9 @@ export const translations: Record<Language, Translations> = {
     storageDesc: 'Файлы скачиваются напрямую через браузер в вашу стандартную папку Загрузки (Downloads).',
     serverStorage: 'Хранилище сервера',
     browserDownload: 'Загрузка браузера',
+    iosTitle: 'iPhone / iPad',
+    iosDownloadHint: 'Файл откроется через Safari. При необходимости используйте Share → Save to Files.',
+    actualSize: 'Фактический размер',
     legalNotice: 'Пользователь должен скачивать только тот контент, на который у него есть право.',
     errorTitle: 'Произошла ошибка',
     errors: {
@@ -316,6 +325,9 @@ export const translations: Record<Language, Translations> = {
     storageDesc: 'Files are streamed directly through your browser into your default Downloads folder.',
     serverStorage: 'Server Storage',
     browserDownload: 'Browser Download',
+    iosTitle: 'iPhone / iPad',
+    iosDownloadHint: 'The file opens in Safari. Use Share → Save to Files when needed.',
+    actualSize: 'Actual size',
     legalNotice: 'Users should only download content they have the right to download.',
     errorTitle: 'An error occurred',
     errors: {
@@ -402,6 +414,9 @@ export const translations: Record<Language, Translations> = {
     storageDesc: 'Файллар тўғридан-тўғри браузерингиз орқали қурилмангизнинг Юклашлар (Downloads) папкасига сақланади.',
     serverStorage: 'Сервер хотираси',
     browserDownload: 'Браузер юкламаси',
+    iosTitle: 'iPhone / iPad',
+    iosDownloadHint: 'Юкланган файл Safari орқали очилади. Керак бўлса Share → Save to Files орқали сақланг.',
+    actualSize: 'Ҳақиқий ҳажм',
     legalNotice: 'Фойдаланувчи фақат юклаб олишга ҳаққи бўлган контентдан фойдаланиши керак.',
     errorTitle: 'Хатолик юз берди',
     errors: {

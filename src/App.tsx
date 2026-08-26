@@ -185,7 +185,7 @@ const MainContent: React.FC = () => {
               duration: videoMetadata?.durationFormatted,
               filename: (updated.filename || 'video.mp4').replace(/^ilmhub_[a-zA-Z0-9_-]+_/, ''),
               downloadUrl: api.getDownloadFileUrl(updated.id),
-              fileSize: updated.total
+              fileSize: updated.filesize || updated.total
             });
             setHistory(newHistory);
           } else if (updated.status === 'failed') {

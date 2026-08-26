@@ -33,6 +33,11 @@ export const DownloadCompleted: React.FC<DownloadCompletedProps> = ({
   const [isSavingDirectory, setIsSavingDirectory] = useState(false);
   const [directorySaved, setDirectorySaved] = useState(false);
 
+  const isIOS = typeof navigator !== 'undefined' && (
+    /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  );
+
   const fileUrl = api.getDownloadFileUrl(job.id);
   const cleanFilename = (job.filename || 'video.mp4').replace(/^ilmhub_[a-zA-Z0-9_-]+_/, '');
 
@@ -44,6 +49,16 @@ export const DownloadCompleted: React.FC<DownloadCompletedProps> = ({
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // ignore
+    }
+  };
+
+  const handleDownload = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isIOS) return;
+
+    event.preventDefault();
+    const opened = window.open(fileUrl, '_blank', 'noopener,noreferrer');
+    if (!opened) {
+      window.location.assign(fileUrl);
     }
   };
 
@@ -128,19 +143,26 @@ export const DownloadCompleted: React.FC<DownloadCompletedProps> = ({
               {job.total && (
                 <>
                   <span>•</span>
-                  <span>{job.total}</span>
+                  <span>{t.actualSize}: {job.filesize || job.total}</span>
                 </>
               )}
             </div>
           </div>
         </div>
 
+        {isIOS && (
+          <div className="w-full max-w-md rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 p-3 text-left text-xs text-blue-800 dark:text-blue-200">
+            <p className="font-bold">{t.iosTitle}</p>
+            <p className="mt-1 leading-relaxed">{t.iosDownloadHint}</p>
+          </div>
+        )}
+
         {/* Action Buttons */}
         <div className="w-full max-w-md flex flex-col gap-2.5 pt-1">
           {/* Main Direct Download button */}
           <a
             href={fileUrl}
-            download={cleanFilename}
+            onClick={handleDownload}
             id="download-file-button"
             className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl font-bold text-base sm:text-lg text-white bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/40 transition-all cursor-pointer"
           >
@@ -150,16 +172,17 @@ export const DownloadCompleted: React.FC<DownloadCompletedProps> = ({
 
           {/* Secondary Actions Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {/* Optional Folder save (Chrome/Edge desktop) */}
-            <button
-              type="button"
-              onClick={handleSaveToDirectory}
-              disabled={isSavingDirectory}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors"
-            >
-              <FolderDown className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span>{directorySaved ? t.copied : isSavingDirectory ? t.processing : t.saveToFolderBtn}</span>
-            </button>
+            {!isIOS && (
+              <button
+                type="button"
+                onClick={handleSaveToDirectory}
+                disabled={isSavingDirectory}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors"
+              >
+                <FolderDown className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <span>{directorySaved ? t.copied : isSavingDirectory ? t.processing : t.saveToFolderBtn}</span>
+              </button>
+            )}
 
             {/* Copy direct link */}
             <button

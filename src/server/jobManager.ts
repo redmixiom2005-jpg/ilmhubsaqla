@@ -9,6 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import { DownloadJob, DownloadJobStatus } from '../types';
 import { config } from './config';
+import { formatBytes } from './ytdlp';
 
 interface ActiveJobProcess {
   job: DownloadJob;
@@ -230,10 +231,19 @@ class DownloadJobManager {
           // Find generated file
           const completedFilename = this.findGeneratedFile(filePrefix);
           if (completedFilename) {
+            const completedPath = path.join(config.downloadDir, completedFilename);
+            const fileStats = fs.statSync(completedPath);
+            const extension = path.extname(completedFilename).slice(1).toLowerCase();
             job.status = 'completed';
             job.progress = 100;
             job.filename = completedFilename;
             job.downloadUrl = `/api/download/${job.id}/file`;
+            job.filesizeBytes = fileStats.size;
+            job.filesize = formatBytes(fileStats.size);
+            job.total = job.filesize;
+            job.extension = extension;
+            job.mimeType = extension === 'mp3' ? 'audio/mpeg' : extension === 'webm' ? 'video/webm' : 'video/mp4';
+            job.resolution = job.quality === 'audio' ? undefined : job.quality;
             job.updatedAt = Date.now();
             this.jobs.set(job.id, job);
           } else {
